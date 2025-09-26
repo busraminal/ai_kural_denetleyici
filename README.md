@@ -1,4 +1,4 @@
-# 🏗️ AI Kural Denetleyici  
+#  AI Kural Denetleyici  
 
 **AI Kural Denetleyici**, gayrimenkul değerleme raporlarının **mevzuat ve standartlara uygunluğunu otomatik denetleyen** bir yazılım sistemidir.  
 Bu proje, manuel kontrol süreçlerinde kaybolan zamanı azaltmayı, hata payını düşürmeyi ve düzenleyici uyumu (compliance) artırmayı hedefler.  
@@ -111,3 +111,4 @@ python src/main.py --input report/ornek_rapor.pdf --output kontrol_sonucu.xlsx
 ## 📜 Lisans  
 
 MIT License © 2025  
+
