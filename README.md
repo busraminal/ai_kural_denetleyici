@@ -1,21 +1,22 @@
-#  AI Kural Denetleyici  
+# 🏗️ AI Kural Denetleyici  
 
-**AI Kural Denetleyici**, gayrimenkul değerleme raporlarının **mevzuat ve standartlara uygunluğunu otomatik denetleyen** bir yazılım sistemidir.  
+**AI Kural Denetleyici**, gayrimenkul değerleme raporlarının **mevzuat ve standartlara uygunluğunu** hem **kural tabanlı** (rule-engine) hem de **yapay zekâ destekli** analizlerle denetleyen bir sistemdir.  
+
 Bu proje, manuel kontrol süreçlerinde kaybolan zamanı azaltmayı, hata payını düşürmeyi ve düzenleyici uyumu (compliance) artırmayı hedefler.  
 
 ---
 
 ## 📌 Amaç  
 
-Gayrimenkul değerleme raporları; **SPK, BDDK, TSKB** ve uluslararası standartlara (IVSC, RICS vb.) uygun hazırlanmak zorundadır.  
-Ancak bu raporlarda:  
-- Eksik alanlar (ör. ada/parsel, ekspertiz tarihi, rapor no)  
-- Format hataları (ör. yanlış TCKN, yanlış tarih formatı)  
-- Çapraz-alan tutarsızlıkları (ör. raporda konut yazıyor ama fiili kullanım depo)  
+Gayrimenkul değerleme raporlarında:  
+- 📑 **Eksik alanlar** (ör. ada/parsel, ekspertiz tarihi, rapor no)  
+- 🧾 **Format hataları** (ör. yanlış TCKN, yanlış tarih formatı)  
+- 🔀 **Çapraz-alan tutarsızlıkları** (ör. raporda konut yazıyor ama fiili kullanım depo)  
+- 📖 **Mevzuat uyumsuzlukları** (SPK, BDDK, IVSC, RICS standartları)  
 
 gibi sorunlar sıkça görülür.  
 
-AI Kural Denetleyici, bu sorunları otomatik tespit ederek **Excel/PDF çıktıları** ile raporlar.  
+AI Kural Denetleyici, bu sorunları otomatik tespit ederek **Excel/PDF çıktıları** üretir.  
 
 ---
 
@@ -24,23 +25,32 @@ AI Kural Denetleyici, bu sorunları otomatik tespit ederek **Excel/PDF çıktıl
 ```
 ai_kural_denetleyici/
 │
-├── src/                  # Ana uygulama kodları
+├── src/                  
 │   ├── rules/            # JSON/YAML kural setleri
 │   ├── analyzers/        # Rapor çözümleme modülleri
+│   ├── llm/              # Ollama + FAISS + BM25 + reranker entegrasyonu
 │   ├── outputs/          # Excel/PDF rapor üretici
-│   └── main.py           # Çalıştırma dosyası
+│   └── main.py           
 │
 ├── data/rules/           # Örnek mevzuat kuralları
 ├── report/               # Örnek değerleme raporları
-├── .gitignore
 ├── config.yaml           # Sistem ayarları
 └── README.md
 ```
 
-- **Kural Motoru (Rule Engine)** → YAML/JSON dosyalarından kuralları okur.  
-- **Metin Çözücü (Parser)** → PDF/Word raporlarını chunk’lara ayırır.  
-- **Denetleyici (Validator)** → her chunk için zorunlu alan/format kontrolü yapar.  
-- **Raporlayıcı (Reporter)** → eksik ve hatalı kısımları Excel’de renk kodlu olarak işaretler.  
+### 🧠 AI Katmanı
+- **Yerel LLM (Ollama)** → Phi-3, Qwen, Mistral gibi modellerle *offline inference*.  
+- **FAISS + BM25 hibrit arama** → rapor ve mevzuat dokümanlarında arama & chunk retrieval.  
+- **Reranker** → semantic aramadan sonra en uygun kuralı seçme.  
+- **RAG (Retrieval-Augmented Generation)** → PDF mevzuatlardan bağlamlı kural denetimi.  
+
+### 🔧 Rule Engine Katmanı
+- YAML/JSON kural dosyaları → zorunlu alan & format kuralları.  
+- Hızlı if-else kontrolleri → TCKN, tarih formatı, ada/parsel yapısı.  
+
+### 📊 Çıktı Katmanı
+- Renk kodlu **Excel raporu**  
+- Yöneticiye hazır **PDF özet raporu**  
 
 ---
 
@@ -48,9 +58,9 @@ ai_kural_denetleyici/
 
 ### Gereksinimler  
 - Python **3.11+**  
+- Ollama (yerel LLM çalıştırmak için)  
 - `pip install -r requirements.txt`  
 
-### Adımlar  
 ```bash
 # Repo klonla
 git clone https://github.com/busraminal/ai_kural_denetleyici.git
@@ -65,50 +75,57 @@ source .venv/bin/activate  # Linux/Mac
 pip install -r requirements.txt
 ```
 
+Ollama için:  
+```bash
+ollama pull qwen2.5:7b
+ollama pull mistral
+```
+
 ---
 
 ## ▶️ Kullanım  
 
 ```bash
-python src/main.py --input report/ornek_rapor.pdf --output kontrol_sonucu.xlsx
-```
+# Kural tabanlı kontrol
+python src/main.py --input report/ornek_rapor.pdf --output kontrol.xlsx
 
-- `--input` → kontrol edilecek rapor dosyası  
-- `--output` → denetim sonucunun kaydedileceği Excel dosyası  
+# AI destekli RAG kontrol
+python src/main.py --input report/ornek_rapor.pdf --rag --output kontrol_ai.xlsx
+```
 
 ---
 
 ## 📊 Örnek Çıktı  
 
-| Alan Adı           | Beklenen Değer | Rapor Değeri  | Durum       |
-|--------------------|----------------|---------------|-------------|
-| Rapor Numarası     | Zorunlu        | (boş)         | ❌ Eksik     |
-| Fiili Kullanım     | Konut          | Depo          | ⚠️ Tutarsız |
-| Ada/Parsel         | Numeric        | "12/A"        | ❌ Hatalı   |
-| Uzman TCKN         | 11 haneli      | 123456        | ❌ Hatalı   |
+| Alan Adı           | Beklenen Değer | Rapor Değeri  | Durum       | Açıklama |
+|--------------------|----------------|---------------|-------------|----------|
+| Rapor Numarası     | Zorunlu        | (boş)         | ❌ Eksik     | SPK Mevzuatı md.12 gereği zorunlu |
+| Fiili Kullanım     | Konut          | Depo          | ⚠️ Tutarsız | Tapu kaydı ile uyumsuz |
+| Ada/Parsel         | Numeric        | "12/A"        | ❌ Hatalı   | Format hatası |
+| Uzman TCKN         | 11 haneli      | 123456        | ❌ Hatalı   | Regex kontrolü başarısız |
 
 ---
 
 ## 🧩 Özellikler  
 
 - 📑 **Eksik Alan Kontrolü** → zorunlu alanların boş olup olmadığını tespit eder.  
-- 🧮 **Format Denetimi** → tarih, TCKN, ada/parsel gibi format kurallarını kontrol eder.  
-- 🔀 **Çapraz Alan Tutarlılığı** → farklı alanların birbiriyle uyumunu karşılaştırır.  
-- 📊 **Excel/PDF Raporlama** → sonuçları renk kodlu, yöneticiye hazır formatta üretir.  
-- ⚡ **Hızlı ve Modüler** → yeni kural setleri kolayca eklenebilir.  
+- 🧮 **Format Denetimi** → TCKN, tarih, ada/parsel kuralları.  
+- 🔀 **Çapraz Alan Tutarlılığı** → fiili kullanım vs rapor bilgisi.  
+- 📖 **Mevzuat RAG** → PDF mevzuatından kuralları otomatik çekip yorumlatır.  
+- 📊 **Excel/PDF Raporlama** → yöneticiye hazır çıktı üretir.  
+- ⚡ **Yerel LLM Desteği** → internet olmadan çalışır, gizlilik dostu.  
 
 ---
 
 ## 🛠️ Yol Haritası  
 
-- [ ] Mevzuat RAG entegrasyonu (PDF mevzuattan kural çekme)  
-- [ ] Web arayüzü (Flask/Django ile)  
-- [ ] Çoklu rapor toplu kontrol özelliği  
-- [ ] CI/CD ve Docker desteği  
+- [ ] Çoklu rapor batch analizi  
+- [ ] Web arayüzü (Flask/Django)  
+- [ ] Docker imajı  
+- [ ] CI/CD pipeline  
+- [ ] LLM destekli otomatik kural çıkarımı  
 
 ---
 
 ## 📜 Lisans  
-
 MIT License © 2025  
-
