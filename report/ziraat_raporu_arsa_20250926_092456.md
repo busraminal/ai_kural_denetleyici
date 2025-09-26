@@ -1,0 +1,77 @@
+# Rapor Özeti (ziraat_raporu_arsa)
+
+- **Verdict:** EKSİK
+- **present:** 16  |  **missing:** 44  |  **wrong:** 1  |  **optional_absent:** 10
+
+## Bulgular
+- `META_001` **missing** [major] — Rapor tarih üçlüsü — _bulunan: {'talep': False, 'kesif': False, 'rapor': False}, tarih_sayısı: 2_
+- `META_002:RaporNo` **missing** [major] — Rapor ve talep kimliği → RaporNo
+- `META_002:TalepNo` **missing** [major] — Rapor ve talep kimliği → TalepNo
+- `META_002:TalepEdenBirim` **missing** [major] — Rapor ve talep kimliği → TalepEdenBirim
+- `META_002:MusteriAdi` **missing** [major] — Rapor ve talep kimliği → MusteriAdi
+- `KONUM_001` **present** [major] — Konum/CBS (desteklenmeyen type: geo_required)
+- `TAPU_001:Tür|Tur` **missing** [critical] — Takyidatlı tapu kaydı → kolon Tür|Tur
+- `TAPU_001:Alacaklı|Alacakli|Alicakli` **present** [critical] — Takyidatlı tapu kaydı → kolon Alacaklı|Alacakli|Alicakli
+- `TAPU_001:Tutar|Bedel` **missing** [critical] — Takyidatlı tapu kaydı → kolon Tutar|Bedel
+- `TAPU_001:Yevmiye No|YevmiyeNo|Yevmiye` **missing** [critical] — Takyidatlı tapu kaydı → kolon Yevmiye No|YevmiyeNo|Yevmiye
+- `TAPU_001:Tarih` **present** [critical] — Takyidatlı tapu kaydı → kolon Tarih
+- `TAPU_002:Malikler` **missing** [major] — Mülkiyet ve hisse → Malikler
+- `TAPU_002:HisseOranlari` **missing** [major] — Mülkiyet ve hisse → HisseOranlari
+- `TAPU_002:Yuzolcumu` **missing** [major] — Mülkiyet ve hisse → Yuzolcumu
+- `ADA_PARSEL_001` **present** [major] — Ada/Parsel
+- `IMAR_001` **present** [critical] — İmar durumu
+- `IMAR_002:KAKS` **missing** [minor] — Yapılaşma koşulları → KAKS
+- `IMAR_002:TAKS` **missing** [minor] — Yapılaşma koşulları → TAKS
+- `IMAR_002:Hmax` **missing** [minor] — Yapılaşma koşulları → Hmax
+- `RUHSAT_001` **present** [critical] — Ruhsat–iskan–proje uyumu — _TYPE=doc_triplet_match (kısmi kontrol)_
+- `DURUM_001` **present** [critical] — Yasal vs Mevcut durum karşılaştırması — _TYPE=compare_required (kısmi kontrol)_
+- `DEGER_001` **present** [major] — Değerleme yöntemi ve gerekçesi
+- `EMSAL_001` **wrong** [major] — Emsal seti (>=3) — _adet=0, min=3_
+- `EMSAL_002:Adres` **missing** [major] — Emsal kolonları → kolon Adres
+- `EMSAL_002:Mesafe` **missing** [major] — Emsal kolonları → kolon Mesafe
+- `EMSAL_002:m2` **present** [major] — Emsal kolonları → kolon m2
+- `EMSAL_002:BirimDeger` **missing** [major] — Emsal kolonları → kolon BirimDeger
+- `EMSAL_002:Duzeltmeler` **missing** [major] — Emsal kolonları → kolon Duzeltmeler
+- `EMSAL_002:Kaynak` **missing** [major] — Emsal kolonları → kolon Kaynak
+- `GELIR_001:DolulukOrani` **missing** [major] — Gelir yöntemi girdileri → DolulukOrani
+- `GELIR_001:NetKira` **missing** [major] — Gelir yöntemi girdileri → NetKira
+- `GELIR_001:CapOraniVeyaIskonto` **missing** [major] — Gelir yöntemi girdileri → CapOraniVeyaIskonto
+- `GELIR_001:Giderler` **missing** [major] — Gelir yöntemi girdileri → Giderler
+- `MALIYET_001:YapimBirimMaliyeti` **missing** [minor] — Maliyet yöntemi verileri → YapimBirimMaliyeti
+- `MALIYET_001:YipranmaOrani` **missing** [minor] — Maliyet yöntemi verileri → YipranmaOrani
+- `MALIYET_001:ArsaPayi` **missing** [minor] — Maliyet yöntemi verileri → ArsaPayi
+- `SIGORTA_001` **missing** [major] — Sigorta değeri — _TYPE=separate_calc (kısmi kontrol)_
+- `NİHAİ_001:YasalDurumDegeri` **missing** [critical] — Nihai değerler → YasalDurumDegeri
+- `NİHAİ_001:MevcutDurumDegeri` **missing** [critical] — Nihai değerler → MevcutDurumDegeri
+- `KANAAT_001:Kanaat` **missing** [major] — Satışa elverişlilik kanaati → Kanaat
+- `KANAAT_001:Gerekce` **missing** [major] — Satışa elverişlilik kanaati → Gerekce
+- `KANAAT_001:OngorulenSatisSuresiGun` **missing** [major] — Satışa elverişlilik kanaati → OngorulenSatisSuresiGun
+- `RISK_001:deprem_bolgesi` **missing** [major] — Deprem ve kentsel dönüşüm → deprem_bolgesi
+- `RISK_001:kentsel_donusum` **missing** [major] — Deprem ve kentsel dönüşüm → kentsel_donusum
+- `RISK_002:5403` **optional_absent** [minor] — Özel kısıtlar (tarım/sit/koruma) → 5403
+- `RISK_002:3083` **optional_absent** [minor] — Özel kısıtlar (tarım/sit/koruma) → 3083
+- `RISK_002:sit_koruma` **optional_absent** [minor] — Özel kısıtlar (tarım/sit/koruma) → sit_koruma
+- `RISK_002:doga_koruma` **optional_absent** [minor] — Özel kısıtlar (tarım/sit/koruma) → doga_koruma
+- `YIKIM_001` **missing** [major] — Yıkım kararı olan yapılar (detay yükümlülükleri) — _TYPE=composite_presence (kısmi kontrol)_
+- `EKLER_001:DisFoto` **missing** [major] — Ek zorunlu: DisFoto
+- `EKLER_001:IcFoto` **missing** [major] — Ek zorunlu: IcFoto
+- `EKLER_001:TapuSureti` **missing** [major] — Ek zorunlu: TapuSureti
+- `EKLER_001:TakyidatYazisi` **missing** [major] — Ek zorunlu: TakyidatYazisi
+- `EKLER_001:KrokiUydu` **optional_absent** [major] — Ek opsiyonel: KrokiUydu
+- `EKLER_001:ImarDurumYazisi` **optional_absent** [major] — Ek opsiyonel: ImarDurumYazisi
+- `EKLER_001:Ruhsat` **optional_absent** [major] — Ek opsiyonel: Ruhsat
+- `EKLER_001:Iskan` **optional_absent** [major] — Ek opsiyonel: Iskan
+- `EKLER_001:OnayliProje` **optional_absent** [major] — Ek opsiyonel: OnayliProje
+- `EKLER_001:KadastroPaftasi` **optional_absent** [major] — Ek opsiyonel: KadastroPaftasi
+- `BIÇIM_001:date` **present** [major] — Tarih formatı (kaba)
+- `BIÇIM_001:tckn_regex` **present** [major] — TODO desteklenecek: tckn_regex
+- `BIÇIM_001:area_positive` **present** [major] — TODO desteklenecek: area_positive
+- `BIÇIM_001:percent_range` **present** [major] — TODO desteklenecek: percent_range
+- `BIÇIM_001:currency_present` **present** [major] — TODO desteklenecek: currency_present
+- `BIÇIM_001:forbid_terms` **present** [major] — Yasaklı ifade
+- `ARSA_001` **present** [major] — İmar çapı
+- `ARSA_002:KAKS` **missing** [major] — İmar lejantı → KAKS
+- `ARSA_002:TAKS` **missing** [major] — İmar lejantı → TAKS
+- `ARSA_002:Hmax` **missing** [major] — İmar lejantı → Hmax
+- `ARSA_003:YolaCephe` **missing** [minor] — Yola cephe ve parselasyon → YolaCephe
+- `ARSA_003:ParselasyonIslemleri` **missing** [minor] — Yola cephe ve parselasyon → ParselasyonIslemleri

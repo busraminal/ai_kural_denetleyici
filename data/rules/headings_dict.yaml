@@ -1,0 +1,90 @@
+kimlik:
+  - "kimlik bilgileri"
+  - "gayrimenkule ilişkin bilgiler"
+  - "gayrimenkulün kimlik bilgileri"
+  - "temel bilgiler"
+  - "adres"
+  - "ada"
+  - "parsel"
+  - "malik"
+  - "hisse"
+
+konum:
+  - "konum"
+  - "koordinat"
+  - "uavt"
+  - "megsis"
+  - "pafta"
+  - "lokasyon"
+
+tapu:
+  - "tapu bilgileri"
+  - "gayrimenkulün tapu bilgileri"
+  - "yasal kısıtlamalar"
+  - "takyidat"
+  - "şerh"
+  - "ipotek"
+  - "haciz"
+  - "irtifak"
+
+imar:
+  - "imar durumu"
+  - "uygulama imar planı"
+  - "yapılaşma koşulları"
+  - "imar lejantı"
+  - "kaks"
+  - "taks"
+  - "hmax"
+  - "imar planı"
+
+ruhsat:
+  - "ruhsat"
+  - "iskan"
+  - "yapı kullanma izin"
+  - "onaylı proje"
+  - "kat planı"
+  - "ruhsat, mimari proje ve yasal izinler"
+
+emsal:
+  - "emsaller"
+  - "emsal karşılaştırma"
+  - "piyasa emsali"
+  - "karşılaştırılabilir satışlar"
+  - "karşılaştırılabilir satış"
+
+yontem:
+  - "değerlemeye ilişkin bilgiler"
+  - "analizler ve sonuçların değerlendirilmesi"
+  - "gayrimenkulün değerine etki eden faktörler"
+
+sigorta:
+  - "sigorta değeri"
+  - "yenileme bedeli"
+
+nihai:
+  - "nihai değer"
+  - "sonuç değerleri"
+
+kanaat:
+  - "kanaat"
+  - "satışa elverişlilik"
+  - "değerlendirme"
+  - "sonuç"
+  - "analizler ve sonuçların değerlendirilmesi ile hesaplamalar"
+  - "ekspertiz satışa ilişkin kanaati"
+  - "ekspertiz çalışmasına ilişkin kanaati"
+
+risk:
+  - "deprem"
+  - "kentsel dönüşüm"
+  - "yıkım kararı"
+  - "sit"
+  - "koruma"
+  - "tarımsal kısıt"
+
+ekler:
+  - "ekler"
+  - "fotoğraflar"
+  - "kroki"
+  - "uydu"
+  - "belge ekleri"

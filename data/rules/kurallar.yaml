@@ -1,0 +1,442 @@
+metadata:
+  version: "1.1"
+  domain: "ziraat_degerleme"
+  description: "Başkanlık Ziraat Ekspertiz Teknik Şartnamesi (22.12.2022) ve saha pratiklerine göre zorunlu kontrol listesi"
+  default_severity: "major"   # info | minor | major | critical
+
+# Tüm raporlar için ortak zorunluluklar
+common:
+  - id: META_001
+    title: "Rapor tarih üçlüsü"
+    field: Tarihler
+    type: date_triplet                # talep/keşif/rapor
+    required: true
+    constraints:
+      format: "YYYY-MM-DD"
+      chronology: ["talep <= kesif <= rapor"]
+    message: "Talep–keşif–rapor tarihleri eksik, format hatalı veya kronoloji bozuk."
+    severity: major
+
+  - id: META_002
+    title: "Rapor ve talep kimliği"
+    field: Kimlik
+    type: required_fields
+    required: true
+    fields: ["RaporNo","TalepNo","TalepEdenBirim","MusteriAdi"]
+    message: "Rapor no, talep no, talep eden birim veya müşteri adı eksik."
+    severity: major
+
+  - id: KONUM_001
+    title: "Konum/CBS"
+    field: Konum
+    type: geo_required                # UAVT/MEGSİS/koordinat/pafta ve/veya adres
+    required: true
+    message: "UAVT/MEGSİS koordinatı veya pafta/konum referansı yok."
+    severity: major
+
+  - id: TAPU_001
+    title: "Takyidatlı tapu kaydı"
+    field: TapuKaydi
+    type: takidat_table               # her satır: tür–alacaklı–tutar–yevmiye–tarih
+    required: true
+    constraints:
+      # Alternatif yazımlar için regex/alternatif desteği
+      columns_required:
+        - "Tür|Tur"
+        - "Alacaklı|Alacakli|Alicakli"
+        - "Tutar|Bedel"
+        - "Yevmiye No|YevmiyeNo|Yevmiye"
+        - "Tarih"
+    message: "Takyidatlı tapu kaydı/kolonları eksik (tür, alacaklı, tutar, yevmiye, tarih)."
+    severity: critical
+
+  - id: TAPU_002
+    title: "Mülkiyet ve hisse"
+    field: MalikHisse
+    type: required_fields
+    required: true
+    fields: ["Malikler","HisseOranlari","Yuzolcumu"]
+    message: "Malik, hisse oranları veya yüzölçümü belirtilmemiş."
+    severity: major
+
+  - id: ADA_PARSEL_001
+    title: "Ada/Parsel"
+    field: AdaParsel
+    type: coexist                      # ikisi birlikte
+    required: true
+    fields: ["Ada","Parsel"]
+    message: "Ada ve Parsel birlikte ve açık değil."
+    severity: major
+
+  - id: IMAR_001
+    title: "İmar durumu"
+    field: ImarDurumu
+    type: nonempty_text
+    required: true
+    message: "İmar durumu bilgisi yok."
+    severity: critical
+
+  - id: IMAR_002
+    title: "Yapılaşma koşulları"
+    field: ImarLejant
+    type: required_fields
+    required: false
+    fields: ["KAKS","TAKS","Hmax"]
+    message: "KAKS/TAKS/Hmax eksik (imar durumu verilmişse kontrol edilir)."
+    severity: minor
+
+  - id: RUHSAT_001
+    title: "Ruhsat–iskan–proje uyumu"
+    field: RuhsatProje
+    type: doc_triplet_match           # ruhsat no/tarih = iskan = proje uyumu
+    required: true
+    message: "Ruhsat–iskan–onaylı proje numara/tarih uyumu belirtilmemiş veya tutarsız."
+    severity: critical
+
+  - id: DURUM_001
+    title: "Yasal vs Mevcut durum karşılaştırması"
+    field: YasalMevcutKarsilastirma
+    type: compare_required
+    required: true
+    message: "Yasal durum ile mevcut durum karşılaştırması yapılmamış."
+    severity: critical
+
+  - id: DEGER_001
+    title: "Değerleme yöntemi ve gerekçesi"
+    field: YontemGerekcesi
+    type: nonempty_text
+    required: true
+    message: "Seçilen değerleme yöntem(ler)i ve gerekçesi belirtilmemiş."
+    severity: major
+
+  - id: EMSAL_001
+    title: "Emsal seti (>=3)"
+    field: Emsaller
+    type: list_min_count              # emsal karşılaştırma yöntemi seçildiyse zorunlu
+    required: true
+    min: 3
+    message: "En az 3 emsal ve düzeltme tablosu zorunludur."
+    severity: major
+
+  - id: EMSAL_002
+    title: "Emsal kolonları"
+    field: EmsalTablo
+    type: table_columns
+    required: true
+    columns_required: ["Adres","Mesafe","m2","BirimDeger","Duzeltmeler","Kaynak"]
+    message: "Emsal tablosunda zorunlu kolonlar eksik."
+    severity: major
+
+  - id: GELIR_001
+    title: "Gelir yöntemi girdileri"
+    field: GelirYontemi
+    type: required_fields
+    required: false
+    fields: ["DolulukOrani","NetKira","CapOraniVeyaIskonto","Giderler"]
+    message: "Gelir yönteminde doluluk/kira/cap/iskonto/gider detayları eksik."
+    severity: major
+
+  - id: MALIYET_001
+    title: "Maliyet yöntemi verileri"
+    field: MaliyetYontemi
+    type: required_fields
+    required: false
+    fields: ["YapimBirimMaliyeti","YipranmaOrani","ArsaPayi"]
+    message: "Maliyet yöntemi için birim maliyet/yıpranma/arsa payı eksik."
+    severity: minor
+
+  - id: SIGORTA_001
+    title: "Sigorta değeri"
+    field: SigortaDegeriHesap
+    type: separate_calc               # ayrı hesap ve kaynak
+    required: true
+    message: "Sigorta değeri ayrı hesaplanmamış veya kaynağı belirtilmemiş."
+    severity: major
+
+  - id: NİHAİ_001
+    title: "Nihai değerler"
+    field: NihaiDeger
+    type: required_fields
+    required: true
+    fields: ["YasalDurumDegeri","MevcutDurumDegeri"]
+    message: "Yasal durum ve mevcut durum değerleri ayrı ayrı belirtilmeli."
+    severity: critical
+
+  - id: KANAAT_001
+    title: "Satışa elverişlilik kanaati"
+    field: SatisElverislilik
+    type: required_fields
+    required: true
+    fields: ["Kanaat","Gerekce","OngorulenSatisSuresiGun"]
+    message: "Satışa elverişlilik kanaati/gerekçesi veya öngörülen satış süresi yok."
+    severity: major
+    constraints:
+      range_days:
+        field: "OngorulenSatisSuresiGun"
+        min: 0
+        max: 365
+
+  - id: RISK_001
+    title: "Deprem ve kentsel dönüşüm"
+    field: DepremKentsel
+    type: flags
+    required: true
+    flags: ["deprem_bolgesi","kentsel_donusum"]
+    message: "Deprem bölgesi ve/veya kentsel dönüşüm statüsü bilgisi yok."
+    severity: major
+
+  - id: RISK_002
+    title: "Özel kısıtlar (tarım/sit/koruma)"
+    field: OzelKisitlar
+    type: flags_optional
+    required: false
+    flags: ["5403","3083","sit_koruma","doga_koruma"]
+    message: "Tarımsal/sit/koruma statüleri belirtilmemiş olabilir."
+    severity: minor
+
+  - id: YIKIM_001
+    title: "Yıkım kararı olan yapılar (detay yükümlülükleri)"
+    field: YikimKarari
+    type: composite_presence
+    required: false
+    components:
+      - "Mahiyet"
+      - "Tarih"
+      - "InsaaYili"
+      - "ImarAffiDurumu"
+      - "DayanakGiderilebilirMi"
+      - "AyniBolgedekiDigerleri"
+      - "YikimUygulamasiDurumu"
+    message: "Yıkım kararı için mahiyet, tarih, inşa yılı, imar affı, dayanak, bölgesel kapsam ve uygulama bilgileri eksik."
+    severity: major
+
+  - id: EKLER_001
+    title: "Ekler ve görseller"
+    field: Ekler
+    type: attachments_check
+    required: true
+    attachments:
+      required: ["DisFoto","IcFoto","TapuSureti","TakyidatYazisi"]
+      optional: ["KrokiUydu","ImarDurumYazisi","Ruhsat","Iskan","OnayliProje","KadastroPaftasi"]
+    message: "Zorunlu ekler (dış/iç foto, tapu, takyidat yazısı) eksik."
+    severity: major
+
+  - id: BIÇIM_001
+    title: "Biçim ve veri kalitesi"
+    field: Kalite
+    type: quality_rules
+    required: true
+    rules:
+      - { kind: "date_format", fields: ["Tarih"], format: "YYYY-MM-DD" }
+      - { kind: "tckn_regex", fields: ["UzmanTCKN"], pattern: "^[1-9][0-9]{10}$" }
+      - { kind: "area_positive", fields: ["Net_m2","Brut_m2"] }
+      - { kind: "percent_range", fields: ["YipranmaOrani","DuzeltmeYuzdeleri"], min: 0, max: 100 }
+      - { kind: "currency_present", fields: ["Degerler"] }
+      - { kind: "forbid_terms", target: "text", terms: ["yaklaşık", "???", "net değil"] }
+    message: "Format/regex/aralık/yasaklı ifade ihlali var."
+    severity: major
+
+# Taşınmaz türüne göre ek zorunluluklar
+by_type:
+  arsa:
+    - id: ARSA_001
+      title: "İmar çapı"
+      field: ImarCap
+      type: nonempty_text
+      required: true
+      message: "Arsa için imar çapı belirtilmemiş."
+      severity: major
+    - id: ARSA_002
+      title: "İmar lejantı"
+      field: ImarLejant
+      type: required_fields
+      required: true
+      fields: ["KAKS","TAKS","Hmax"]
+      message: "Arsa için KAKS/TAKS/Hmax eksik."
+      severity: major
+    - id: ARSA_003
+      title: "Yola cephe ve parselasyon"
+      field: ParselOzellikleri
+      type: required_fields
+      required: false
+      fields: ["YolaCephe","ParselasyonIslemleri"]   # tevhit/ifraz/revize
+      message: "Arsa için yola cephe veya parselasyon işlemleri belirtilmemiş olabilir."
+      severity: minor
+
+  tarla:
+    - id: TARLA_001
+      title: "Kadastro paftası"
+      field: KadastroPaftasi
+      type: nonempty_text
+      required: true
+      message: "Tarla için kadastro paftası yok."
+      severity: major
+    - id: TARLA_002
+      title: "Sulama durumu"
+      field: SulamaDurumu
+      type: enum
+      required: true
+      allowed: ["sulu","kuru"]
+      message: "Tarla sulama durumu (sulu/kuru) belirtilmemiş."
+      severity: major
+    - id: TARLA_003
+      title: "Toprak sınıfı"
+      field: ToprakSinifi
+      type: enum
+      required: true
+      allowed: ["I","II","III","IV","V","VI","VII","VIII"]
+      message: "Tarla toprak sınıfı belirtilmemiş."
+      severity: major
+    - id: TARLA_004
+      title: "Tarımsal kısıtlar"
+      field: TarimsalKisit
+      type: flags_optional
+      required: false
+      flags: ["5403","3083","mutlak_tarim","tarimsal_sit"]
+      message: "Tarım yasa/statü kontrolleri işlenmemiş olabilir."
+      severity: minor
+    - id: TARLA_005
+      title: "Parsel bütünlüğü"
+      field: ParselButunlugu
+      type: boolean_required
+      required: false
+      message: "Parsel bütünlüğü bilgisi (tek parça/çoklu) belirtilmemiş."
+      severity: minor
+
+  konut:
+    - id: KONUT_001
+      title: "Ruhsat"
+      field: YapiRuhsati
+      type: nonempty_text
+      required: true
+      message: "Konut için yapı ruhsatı yok."
+      severity: critical
+    - id: KONUT_002
+      title: "İskan"
+      field: Iskan
+      type: nonempty_text
+      required: true
+      message: "Konut için yapı kullanma izin belgesi (iskan) yok."
+      severity: critical
+    - id: KONUT_003
+      title: "Onaylı mimari proje"
+      field: OnayliProje
+      type: nonempty_text
+      required: true
+      message: "Konut için onaylı mimari proje yok."
+      severity: major
+    - id: KONUT_004
+      title: "Bağımsız bölüm ve alanlar"
+      field: Alanlar
+      type: area_pair
+      required: true
+      parts: ["net_m2","brut_m2","OlcumYontemi"]
+      message: "Bağımsız bölüm bilgisi ve net/brüt alan + ölçüm yöntemi belirtilmemiş."
+      severity: major
+    - id: KONUT_005
+      title: "Yönetim planı"
+      field: YonetimPlani
+      type: nonempty_text
+      required: false
+      message: "Konut için yönetim planı opsiyoneldir; belirtilmemiş."
+      severity: info
+
+  bina:
+    - id: BINA_001
+      title: "Ruhsat/iskan/proje"
+      field: BinaBelgeleri
+      type: required_fields
+      required: true
+      fields: ["YapiRuhsati","Iskan","OnayliProje"]
+      message: "Müstakil bina için ruhsat–iskan–proje eksik."
+      severity: critical
+    - id: BINA_002
+      title: "İnşa yılı ve sınıfı"
+      field: InsaatYiliSinifi
+      type: required_fields
+      required: true
+      fields: ["InsaatYili","YapiSinifi"]
+      message: "İnşa yılı veya yapı sınıfı belirtilmemiş."
+      severity: major
+
+  ticari_tesis:
+    - id: TICARI_001
+      title: "İşyeri açma ruhsatı"
+      field: IsyeriRuhsati
+      type: nonempty_text
+      required: true
+      message: "Ticari tesis için iş yeri açma ruhsatı yok."
+      severity: critical
+    - id: TICARI_002
+      title: "Gelir kanıtları"
+      field: GelirBelgeleri
+      type: nonempty_text
+      required: true
+      message: "Ticari tesis için gelir belgeleri yok (gelir yöntemi seçildiyse zorunlu)."
+      severity: major
+    - id: TICARI_003
+      title: "Kapasite raporu"
+      field: KapasiteRaporu
+      type: nonempty_text
+      required: false
+      message: "Kapasite raporu opsiyoneldir; yok."
+      severity: info
+
+  sera:
+    - id: SERA_001
+      title: "Arazi + sera değer ayrımı"
+      field: SeraDegeri
+      type: composite_presence
+      required: true
+      components: ["AraziDegeri","SeraEkipmanDegeri"]
+      message: "Sera için arazi ve ekipman değerleri ayrı yazılmalı."
+      severity: major
+    - id: SERA_002
+      title: "Ekipman mütemmim cüzleri"
+      field: SeraEkipmanlari
+      type: required_fields
+      required: true
+      fields: ["Isitma","Sulama","Havalandirma"]
+      message: "Sera ekipmanları mütemmim cüz olarak sayılmamış."
+      severity: major
+
+  turistik_tesis:
+    - id: TURISTIK_001
+      title: "Turizm işletme belgesi"
+      field: TurizmBelgesi
+      type: nonempty_text
+      required: true
+      message: "Turistik tesis için turizm işletme belgesi yok."
+      severity: critical
+    - id: TURISTIK_002
+      title: "Ruhsat ve proje"
+      field: TesisBelgeleri
+      type: required_fields
+      required: true
+      fields: ["Ruhsat","Proje"]
+      message: "Turistik tesis için ruhsat/proje eksik."
+      severity: major
+
+  akaryakit:
+    - id: AKARYAKIT_001
+      title: "EPDK lisansı"
+      field: EPDKLisans
+      type: nonempty_text
+      required: true
+      message: "Akaryakıt istasyonu için EPDK lisansı yok."
+      severity: critical
+    - id: AKARYAKIT_002
+      title: "Gelir belgeleri"
+      field: GelirBelgeleri
+      type: nonempty_text
+      required: true
+      message: "Akaryakıt istasyonu için gelir belgeleri yok."
+      severity: major
+    - id: AKARYAKIT_003
+      title: "Ruhsat ve proje"
+      field: TesisBelgeleri
+      type: required_fields
+      required: true
+      fields: ["Ruhsat","Proje"]
+      message: "Akaryakıt istasyonu için ruhsat/proje eksik."
+      severity: major

@@ -1,0 +1,373 @@
+{
+  "verdict": "EKSİK",
+  "summary_counts": {
+    "present": 16,
+    "missing": 44,
+    "wrong": 1,
+    "optional_absent": 10
+  },
+  "findings": [
+    {
+      "rule_id": "META_001",
+      "status": "missing",
+      "title": "Rapor tarih üçlüsü",
+      "detail": "bulunan: {'talep': False, 'kesif': False, 'rapor': False}, tarih_sayısı: 2"
+    },
+    {
+      "rule_id": "META_002:RaporNo",
+      "status": "missing",
+      "title": "Rapor ve talep kimliği → RaporNo"
+    },
+    {
+      "rule_id": "META_002:TalepNo",
+      "status": "missing",
+      "title": "Rapor ve talep kimliği → TalepNo"
+    },
+    {
+      "rule_id": "META_002:TalepEdenBirim",
+      "status": "missing",
+      "title": "Rapor ve talep kimliği → TalepEdenBirim"
+    },
+    {
+      "rule_id": "META_002:MusteriAdi",
+      "status": "missing",
+      "title": "Rapor ve talep kimliği → MusteriAdi"
+    },
+    {
+      "rule_id": "KONUM_001",
+      "status": "present",
+      "title": "Konum/CBS (desteklenmeyen type: geo_required)"
+    },
+    {
+      "rule_id": "TAPU_001:Tür|Tur",
+      "status": "missing",
+      "title": "Takyidatlı tapu kaydı → kolon Tür|Tur"
+    },
+    {
+      "rule_id": "TAPU_001:Alacaklı|Alacakli|Alicakli",
+      "status": "present",
+      "title": "Takyidatlı tapu kaydı → kolon Alacaklı|Alacakli|Alicakli"
+    },
+    {
+      "rule_id": "TAPU_001:Tutar|Bedel",
+      "status": "missing",
+      "title": "Takyidatlı tapu kaydı → kolon Tutar|Bedel"
+    },
+    {
+      "rule_id": "TAPU_001:Yevmiye No|YevmiyeNo|Yevmiye",
+      "status": "missing",
+      "title": "Takyidatlı tapu kaydı → kolon Yevmiye No|YevmiyeNo|Yevmiye"
+    },
+    {
+      "rule_id": "TAPU_001:Tarih",
+      "status": "present",
+      "title": "Takyidatlı tapu kaydı → kolon Tarih"
+    },
+    {
+      "rule_id": "TAPU_002:Malikler",
+      "status": "missing",
+      "title": "Mülkiyet ve hisse → Malikler"
+    },
+    {
+      "rule_id": "TAPU_002:HisseOranlari",
+      "status": "missing",
+      "title": "Mülkiyet ve hisse → HisseOranlari"
+    },
+    {
+      "rule_id": "TAPU_002:Yuzolcumu",
+      "status": "missing",
+      "title": "Mülkiyet ve hisse → Yuzolcumu"
+    },
+    {
+      "rule_id": "ADA_PARSEL_001",
+      "status": "present",
+      "title": "Ada/Parsel"
+    },
+    {
+      "rule_id": "IMAR_001",
+      "status": "present",
+      "title": "İmar durumu"
+    },
+    {
+      "rule_id": "IMAR_002:KAKS",
+      "status": "missing",
+      "title": "Yapılaşma koşulları → KAKS"
+    },
+    {
+      "rule_id": "IMAR_002:TAKS",
+      "status": "missing",
+      "title": "Yapılaşma koşulları → TAKS"
+    },
+    {
+      "rule_id": "IMAR_002:Hmax",
+      "status": "missing",
+      "title": "Yapılaşma koşulları → Hmax"
+    },
+    {
+      "rule_id": "RUHSAT_001",
+      "status": "present",
+      "title": "Ruhsat–iskan–proje uyumu",
+      "detail": "TYPE=doc_triplet_match (kısmi kontrol)"
+    },
+    {
+      "rule_id": "DURUM_001",
+      "status": "present",
+      "title": "Yasal vs Mevcut durum karşılaştırması",
+      "detail": "TYPE=compare_required (kısmi kontrol)"
+    },
+    {
+      "rule_id": "DEGER_001",
+      "status": "present",
+      "title": "Değerleme yöntemi ve gerekçesi"
+    },
+    {
+      "rule_id": "EMSAL_001",
+      "status": "wrong",
+      "title": "Emsal seti (>=3)",
+      "detail": "adet=0, min=3"
+    },
+    {
+      "rule_id": "EMSAL_002:Adres",
+      "status": "missing",
+      "title": "Emsal kolonları → kolon Adres"
+    },
+    {
+      "rule_id": "EMSAL_002:Mesafe",
+      "status": "missing",
+      "title": "Emsal kolonları → kolon Mesafe"
+    },
+    {
+      "rule_id": "EMSAL_002:m2",
+      "status": "present",
+      "title": "Emsal kolonları → kolon m2"
+    },
+    {
+      "rule_id": "EMSAL_002:BirimDeger",
+      "status": "missing",
+      "title": "Emsal kolonları → kolon BirimDeger"
+    },
+    {
+      "rule_id": "EMSAL_002:Duzeltmeler",
+      "status": "missing",
+      "title": "Emsal kolonları → kolon Duzeltmeler"
+    },
+    {
+      "rule_id": "EMSAL_002:Kaynak",
+      "status": "missing",
+      "title": "Emsal kolonları → kolon Kaynak"
+    },
+    {
+      "rule_id": "GELIR_001:DolulukOrani",
+      "status": "missing",
+      "title": "Gelir yöntemi girdileri → DolulukOrani"
+    },
+    {
+      "rule_id": "GELIR_001:NetKira",
+      "status": "missing",
+      "title": "Gelir yöntemi girdileri → NetKira"
+    },
+    {
+      "rule_id": "GELIR_001:CapOraniVeyaIskonto",
+      "status": "missing",
+      "title": "Gelir yöntemi girdileri → CapOraniVeyaIskonto"
+    },
+    {
+      "rule_id": "GELIR_001:Giderler",
+      "status": "missing",
+      "title": "Gelir yöntemi girdileri → Giderler"
+    },
+    {
+      "rule_id": "MALIYET_001:YapimBirimMaliyeti",
+      "status": "missing",
+      "title": "Maliyet yöntemi verileri → YapimBirimMaliyeti"
+    },
+    {
+      "rule_id": "MALIYET_001:YipranmaOrani",
+      "status": "missing",
+      "title": "Maliyet yöntemi verileri → YipranmaOrani"
+    },
+    {
+      "rule_id": "MALIYET_001:ArsaPayi",
+      "status": "missing",
+      "title": "Maliyet yöntemi verileri → ArsaPayi"
+    },
+    {
+      "rule_id": "SIGORTA_001",
+      "status": "missing",
+      "title": "Sigorta değeri",
+      "detail": "TYPE=separate_calc (kısmi kontrol)"
+    },
+    {
+      "rule_id": "NİHAİ_001:YasalDurumDegeri",
+      "status": "missing",
+      "title": "Nihai değerler → YasalDurumDegeri"
+    },
+    {
+      "rule_id": "NİHAİ_001:MevcutDurumDegeri",
+      "status": "missing",
+      "title": "Nihai değerler → MevcutDurumDegeri"
+    },
+    {
+      "rule_id": "KANAAT_001:Kanaat",
+      "status": "missing",
+      "title": "Satışa elverişlilik kanaati → Kanaat"
+    },
+    {
+      "rule_id": "KANAAT_001:Gerekce",
+      "status": "missing",
+      "title": "Satışa elverişlilik kanaati → Gerekce"
+    },
+    {
+      "rule_id": "KANAAT_001:OngorulenSatisSuresiGun",
+      "status": "missing",
+      "title": "Satışa elverişlilik kanaati → OngorulenSatisSuresiGun"
+    },
+    {
+      "rule_id": "RISK_001:deprem_bolgesi",
+      "status": "missing",
+      "title": "Deprem ve kentsel dönüşüm → deprem_bolgesi"
+    },
+    {
+      "rule_id": "RISK_001:kentsel_donusum",
+      "status": "missing",
+      "title": "Deprem ve kentsel dönüşüm → kentsel_donusum"
+    },
+    {
+      "rule_id": "RISK_002:5403",
+      "status": "optional_absent",
+      "title": "Özel kısıtlar (tarım/sit/koruma) → 5403"
+    },
+    {
+      "rule_id": "RISK_002:3083",
+      "status": "optional_absent",
+      "title": "Özel kısıtlar (tarım/sit/koruma) → 3083"
+    },
+    {
+      "rule_id": "RISK_002:sit_koruma",
+      "status": "optional_absent",
+      "title": "Özel kısıtlar (tarım/sit/koruma) → sit_koruma"
+    },
+    {
+      "rule_id": "RISK_002:doga_koruma",
+      "status": "optional_absent",
+      "title": "Özel kısıtlar (tarım/sit/koruma) → doga_koruma"
+    },
+    {
+      "rule_id": "YIKIM_001",
+      "status": "missing",
+      "title": "Yıkım kararı olan yapılar (detay yükümlülükleri)",
+      "detail": "TYPE=composite_presence (kısmi kontrol)"
+    },
+    {
+      "rule_id": "EKLER_001:DisFoto",
+      "status": "missing",
+      "title": "Ek zorunlu: DisFoto"
+    },
+    {
+      "rule_id": "EKLER_001:IcFoto",
+      "status": "missing",
+      "title": "Ek zorunlu: IcFoto"
+    },
+    {
+      "rule_id": "EKLER_001:TapuSureti",
+      "status": "missing",
+      "title": "Ek zorunlu: TapuSureti"
+    },
+    {
+      "rule_id": "EKLER_001:TakyidatYazisi",
+      "status": "missing",
+      "title": "Ek zorunlu: TakyidatYazisi"
+    },
+    {
+      "rule_id": "EKLER_001:KrokiUydu",
+      "status": "optional_absent",
+      "title": "Ek opsiyonel: KrokiUydu"
+    },
+    {
+      "rule_id": "EKLER_001:ImarDurumYazisi",
+      "status": "optional_absent",
+      "title": "Ek opsiyonel: ImarDurumYazisi"
+    },
+    {
+      "rule_id": "EKLER_001:Ruhsat",
+      "status": "optional_absent",
+      "title": "Ek opsiyonel: Ruhsat"
+    },
+    {
+      "rule_id": "EKLER_001:Iskan",
+      "status": "optional_absent",
+      "title": "Ek opsiyonel: Iskan"
+    },
+    {
+      "rule_id": "EKLER_001:OnayliProje",
+      "status": "optional_absent",
+      "title": "Ek opsiyonel: OnayliProje"
+    },
+    {
+      "rule_id": "EKLER_001:KadastroPaftasi",
+      "status": "optional_absent",
+      "title": "Ek opsiyonel: KadastroPaftasi"
+    },
+    {
+      "rule_id": "BIÇIM_001:date",
+      "status": "present",
+      "title": "Tarih formatı (kaba)"
+    },
+    {
+      "rule_id": "BIÇIM_001:tckn_regex",
+      "status": "present",
+      "title": "TODO desteklenecek: tckn_regex"
+    },
+    {
+      "rule_id": "BIÇIM_001:area_positive",
+      "status": "present",
+      "title": "TODO desteklenecek: area_positive"
+    },
+    {
+      "rule_id": "BIÇIM_001:percent_range",
+      "status": "present",
+      "title": "TODO desteklenecek: percent_range"
+    },
+    {
+      "rule_id": "BIÇIM_001:currency_present",
+      "status": "present",
+      "title": "TODO desteklenecek: currency_present"
+    },
+    {
+      "rule_id": "BIÇIM_001:forbid_terms",
+      "status": "present",
+      "title": "Yasaklı ifade",
+      "detail": ""
+    },
+    {
+      "rule_id": "ARSA_001",
+      "status": "present",
+      "title": "İmar çapı"
+    },
+    {
+      "rule_id": "ARSA_002:KAKS",
+      "status": "missing",
+      "title": "İmar lejantı → KAKS"
+    },
+    {
+      "rule_id": "ARSA_002:TAKS",
+      "status": "missing",
+      "title": "İmar lejantı → TAKS"
+    },
+    {
+      "rule_id": "ARSA_002:Hmax",
+      "status": "missing",
+      "title": "İmar lejantı → Hmax"
+    },
+    {
+      "rule_id": "ARSA_003:YolaCephe",
+      "status": "missing",
+      "title": "Yola cephe ve parselasyon → YolaCephe"
+    },
+    {
+      "rule_id": "ARSA_003:ParselasyonIslemleri",
+      "status": "missing",
+      "title": "Yola cephe ve parselasyon → ParselasyonIslemleri"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+@'
+language: "tr"
+chunk:
+  max_tokens: 900
+  overlap_tokens: 120
+  by_headings: true
+retrieval:
+  bm25: false        # ilk etapta kapalı (sonra açarız)
+  vector: null       # embedding'i daha sonra ekleyeceğiz
+llm:
+  provider: null
+  model: null
+report:
+  excel: true
+  markdown: true
+'@ | Set-Content -Path .\config.yaml -Encoding UTF8
